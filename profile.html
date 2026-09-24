@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novafulse - Thông Tin Cá Nhân</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <!-- ==================== THANH ĐIỀU HƯỚNG (NAVBAR) ==================== -->
+    <nav class="navbar">
+      <div class="logo">Nova<span>fulse</span></div>
+        <ul class="nav-links">
+            <li><a href="home.html#about">Giới thiệu</a></li>
+            <li><a href="home.html#benefits-container">Lợi ích</a></li>
+            <li><a href="home.html#services">Dịch vụ</a></li>
+            <li><a href="home.html#commitment">Cam kết</a></li>
+            <li><a href="home.html#contact">Liên hệ</a></li>
+            <li><a href="profile.html">Thông tin cá nhân</a></li>
+            <li><a href="review.html">Đánh giá</a></li>
+        </ul>
+        <!-- Xóa dữ liệu sessionStorage khi bấm đăng xuất -->
+        <a href="sign_up.html"><button class="btn-action" onclick="sessionStorage.removeItem('novafulse_products')">Đăng xuất</button></a>
+    </nav>
+
+    <main class="about" style="margin-top: 50px;">
+        <div style="background: linear-gradient(145deg, #121212, #181818); border: 1px solid #222; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 3px solid #ff003c; box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);">
+                <img src="https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-dep-vo-tri-3.jpg" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <h1 style="font-size: 2rem; margin-bottom: 10px;">Thành Viên <span style="color: #ff003c;">Novafulse</span></h1>
+            <p style="background: transparent; border: none; padding: 0; color: #b0b0b0; font-size: 1rem; text-align: center;">Hồ sơ cá nhân tích hợp hệ thống quản lý sản phẩm thông minh trực tuyến.</p>
+           <div class="profile-card">
+            <h2>Thông Tin Cá Nhân</h2>
+
+            <!-- Họ và tên -->
+            <div class="info-group">
+                <span class="label">Họ và tên:</span>
+                <span id="display-name" class="value">Đang tải...</span>
+                <input type="text" id="input-name" class="edit-input" style="display: none;">
+            </div>
+
+            <!-- Email -->
+            <div class="info-group">
+                <span class="label">Email:</span>
+                <span id="display-email" class="value">Đang tải...</span>
+                <input type="email" id="input-email" class="edit-input" style="display: none;">
+            </div>
+
+            <!-- Mật khẩu -->
+            <div class="info-group">
+                <span class="label">Mật khẩu:</span>
+                <div class="password-wrapper">
+                    <span id="display-password" class="value">••••••••</span>
+                    <input type="password" id="input-password" class="edit-input" style="display: none;">
+                    <button type="button" id="toggle-pwd-btn" class="toggle-eye-btn" title="Hiện/Ẩn mật khẩu">👁️</button>
+                </div>
+            </div>
+
+            <!-- Nhóm nút bấm -->
+            <div class="button-group">
+                <button id="edit-btn" class="action-btn">Sửa thông tin</button>
+                <button id="save-btn" class="action-btn save-btn" style="display: none;">Lưu thay đổi</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    </main>
+
+    <section class="services-container" style="margin-top: 30px;">
+        <h2>DANH SÁCH SẢN PHẨM ĐÃ THÊM</h2>
+        <div id="savedProductList" class="product-result-list" style="border: none; background: transparent; padding: 0;">
+            <p style="color: #888; font-style: italic; text-align: center;">Đang tải danh sách sản phẩm...</p>
+        </div>
+    </section>
+
+        <!-- ==================== KHU VỰC CHATBOT TƯ VẤN ==================== -->
+    <section id="chatbot-section">
+        <div class="chat-launcher" id="chatLauncher" onclick="toggleChat()">📖</div>
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <span>Tư Vấn Thiết Kế Web</span>
+                <span class="close-btn" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-box" id="chatBox">
+                <div class="message ai">Xin chào! Bạn đang cần làm Landing Page hay Website bán hàng? Mình có thể hỗ trợ giải đáp các thắc mắc về chi phí, thời gian và kỹ thuật nhé!</div>
+            </div>
+            <div class="suggestions">
+                <button class="suggest-btn" onclick="askPreset('chính sách bảo hành như thế nào?')">chính sách bảo hành như thế nào?</button>
+                <button class="suggest-btn" onclick="askPreset('có hỗ trợ sau khi làm xong không?')">có hỗ trợ sau khi làm xong không?</button>
+                <button class="suggest-btn" onclick="askPreset('thanh toán làm mấy đợt?')">thanh toán làm mấy đợt?</button>
+                <button class="suggest-btn" onclick="askPreset('có phải cọc trước không?')">có phải cọc trước không?</button>
+                <button class="suggest-btn" onclick="askPreset('tên miền và hosting mua ở đâu?')">tên miền và hosting mua ở đâu?</button>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="userInput" placeholder="Nhập câu hỏi của bạn tại đây..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">Gửi</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER HIỆN ĐẠI NOVAFFULSE ==================== -->
+    <footer class="nova-footer">
+        <!-- Vầng sáng nền -->
+        <div class="glow-bg"></div>
+
+        <!-- Các hạt sáng lấp lánh trang trí -->
+        <div class="star" style="top: 25%; left: 15%; width: 2px; height: 2px; animation-delay: 0.5s;"></div>
+        <div class="star" style="top: 30%; right: 18%; width: 3px; height: 3px; animation-delay: 1.2s;"></div>
+        <div class="star" style="bottom: 25%; left: 22%; width: 2px; height: 2px; animation-delay: 0.8s;"></div>
+        <div class="star" style="bottom: 30%; right: 20%; width: 2.5px; height: 2.5px; animation-delay: 1.8s;"></div>
+
+        <!-- Khối chứa đường line và chữ bản quyền đồng bộ -->
+        <div class="tech-lines-container">
+            <div class="line-left"><div class="dot-left"></div></div>
+            <div class="copyright-text">
+                &copy; 2024 <span>Novafulse</span>. All rights reserved.
+            </div>
+            <div class="line-right"><div class="dot-right"></div></div>
+        </div>
+
+        <!-- Dòng phụ phía dưới -->
+        <div class="sub-text">
+            Next-Gen Digital Ecosystem &amp; Platform Solutions
+        </div>
+    </footer>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const displayName = document.getElementById("display-name");
+            const displayEmail = document.getElementById("display-email");
+            const displayPassword = document.getElementById("display-password");
+
+            const inputName = document.getElementById("input-name");
+            const inputEmail = document.getElementById("input-email");
+            const inputPassword = document.getElementById("input-password");
+
+            const editBtn = document.getElementById("edit-btn");
+            const saveBtn = document.getElementById("save-btn");
+            const togglePwdBtn = document.getElementById("toggle-pwd-btn");
+
+            let isPasswordVisible = false;
+
+            // 1. Tải dữ liệu từ localStorage khi load trang
+            function loadUserData() {
+                const name = localStorage.getItem("username") || "Chưa cập nhật";
+                const email = localStorage.getItem("email") || "Chưa cập nhật";
+                const password = localStorage.getItem("password") || "";
+
+                displayName.textContent = name;
+                displayEmail.textContent = email;
+
+                if (password) {
+                    displayPassword.textContent = "•".repeat(password.length);
+                    displayPassword.setAttribute("data-raw", password);
+                } else {
+                    displayPassword.textContent = "Chưa cập nhật";
+                    displayPassword.setAttribute("data-raw", "");
+                }
+            }
+
+            loadUserData();
+
+            // 2. Ẩn/Hiện mật khẩu ở chế độ xem
+            togglePwdBtn.addEventListener("click", function() {
+                const rawPassword = displayPassword.getAttribute("data-raw");
+                if (!rawPassword) return;
+
+                isPasswordVisible = !isPasswordVisible;
+                if (isPasswordVisible) {
+                    displayPassword.textContent = rawPassword;
+                    togglePwdBtn.textContent = "👁️‍🗨️";
+                } else {
+                    displayPassword.textContent = "•".repeat(rawPassword.length);
+                    togglePwdBtn.textContent = "👁️";
+                }
+            });
+
+            // 3. Chuyển sang chế độ chỉnh sửa
+            editBtn.addEventListener("click", function() {
+                const rawPassword = displayPassword.getAttribute("data-raw") || "";
+
+                inputName.value = displayName.textContent !== "Chưa cập nhật" ? displayName.textContent : "";
+                inputEmail.value = displayEmail.textContent !== "Chưa cập nhật" ? displayEmail.textContent : "";
+                inputPassword.value = rawPassword;
+
+                displayName.style.display = "none";
+                displayEmail.style.display = "none";
+                displayPassword.style.display = "none";
+
+                inputName.style.display = "block";
+                inputEmail.style.display = "block";
+                inputPassword.style.display = "block";
+
+                editBtn.style.display = "none";
+                saveBtn.style.display = "inline-block";
+            });
+
+            // 4. Lưu thay đổi vào localStorage
+            saveBtn.addEventListener("click", function() {
+                const newName = inputName.value.trim();
+                const newEmail = inputEmail.value.trim();
+                const newPassword = inputPassword.value.trim();
+
+                localStorage.setItem("username", newName);
+                localStorage.setItem("email", newEmail);
+                localStorage.setItem("password", newPassword);
+
+                displayName.textContent = newName || "Chưa cập nhật";
+                displayEmail.textContent = newEmail || "Chưa cập nhật";
+
+                if (newPassword) {
+                    displayPassword.setAttribute("data-raw", newPassword);
+                    displayPassword.textContent = "•".repeat(newPassword.length);
+                } else {
+                    displayPassword.setAttribute("data-raw", "");
+                    displayPassword.textContent = "Chưa cập nhật";
+                }
+
+                displayName.style.display = "inline";
+                displayEmail.style.display = "inline";
+                displayPassword.style.display = "inline";
+
+                inputName.style.display = "none";
+                inputEmail.style.display = "none";
+                inputPassword.style.display = "none";
+
+                saveBtn.style.display = "none";
+                editBtn.style.display = "inline-block";
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById('savedProductList');
+
+            // Lấy dữ liệu từ sessionStorage (tự động mất khi tắt tab/trình duyệt hoặc đăng xuất)
+            let products = JSON.parse(sessionStorage.getItem('novafulse_products')) || [];
+
+            if (products.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Chưa có sản phẩm nào được thêm từ trang chủ.</p>';
+            } else {
+                container.innerHTML = '';
+                products.forEach(prod => {
+                    const item = document.createElement('div');
+                    item.classList.add('product-item');
+                    item.style.cssText = "background: #181818; border: 1px solid #333; padding: 15px; margin-bottom: 15px; border-radius: 8px; color: #fff;";
+                    item.innerHTML = `
+                        <p style="margin: 5px 0;"><strong>Họ và tên:</strong> ${prod.fullname}</p>
+                        <p style="margin: 5px 0;"><strong>Email:</strong> ${prod.email}</p>
+                        <p style="margin: 5px 0;"><strong>Số điện thoại:</strong> ${prod.phone}</p>
+                        <p style="margin: 5px 0;"><strong>Link sản phẩm:</strong> <a href="${prod.productLink}" target="_blank" style="color: #ff003c;">${prod.productLink}</a></p>
+                        <p style="margin: 5px 0;"><strong>Mô tả:</strong> ${prod.description || 'Không có mô tả'}</p>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+        // Lấy dữ liệu từ localStorage (thay tên key cho khớp với lúc bạn lưu)
+        const name = localStorage.getItem("username") || "Chưa cập nhật";
+        const email = localStorage.getItem("email") || "Chưa cập nhật";
+
+        // In thông tin lên giao diện HTML
+        document.getElementById("display-name").textContent = name;
+        document.getElementById("display-email").textContent = email;
+    });
+        const faqData = {
+            "baohanh": "Bên mình bảo hành vĩnh viễn cho mã nguồn do công ty lập trình và hỗ trợ kỹ thuật miễn phí trong suốt quá trình bạn sử dụng.",
+            "hotro": "Bên mình luôn hỗ trợ kỹ thuật tận tình, hướng dẫn quản trị từ A-Z và giải đáp mọi thắc mắc ngay cả khi website đã bàn giao xong.",
+            "thanhtoan": "Thường thì chi phí sẽ được chia làm 2 đến 3 đợt thanh toán linh hoạt theo tiến độ dự án để bạn yên tâm nhất.",
+            "coc": "Dạ có, khi bắt đầu triển khai dự án bên mình sẽ nhận một khoản cọc nhỏ để lên demo và tiến hành thiết kế.",
+            "hosting": "Bạn có thể tự đứng tên mua hoặc bên mình sẽ hỗ trợ đăng ký trọn gói các nhà cung cấp uy tín đứng tên 100% sở hữu của bạn."
+        };
+
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer.style.display === 'flex') {
+                chatContainer.style.display = 'none';
+            } else {
+                chatContainer.style.display = 'flex';
+            }
+        }
+
+        function askPreset(questionText) {
+            document.getElementById('userInput').value = questionText;
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const rawText = input.value.trim();
+
+            if (!rawText) return;
+
+            chatBox.innerHTML += `<div class="message user">${rawText}</div>`;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const lowerText = rawText.toLowerCase();
+            let aiResponse = "Xin lỗi, câu hỏi này nằm ngoài phạm vi hiểu biết của tôi. Bạn thử hỏi về 'bảo hành', 'hỗ trợ', 'thanh toán', 'cọc' hoặc 'hosting' xem sao nhé! 😅";
+
+            if (lowerText.includes("bảo hành")) {
+                aiResponse = faqData["baohanh"];
+            } else if (lowerText.includes("hỗ trợ")) {
+                aiResponse = faqData["hotro"];
+            } else if (lowerText.includes("thanh toán")) {
+                aiResponse = faqData["thanhtoan"];
+            } else if (lowerText.includes("cọc")) {
+                aiResponse = faqData["coc"];
+            } else if (lowerText.includes("tên miền") || lowerText.includes("hosting")) {
+                aiResponse = faqData["hosting"];
+            }
+
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="message ai">${aiResponse}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 400);
+        }
+    </script>
+</body>
+</html>

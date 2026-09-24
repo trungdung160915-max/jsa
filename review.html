@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Novafulse - Đánh giá web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="review.css">
+  <style>
+    /* CSS tạm thời cho phần chọn số sao nếu trong review.css chưa có */
+    .star-rating {
+        display: flex;
+        gap: 10px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-bottom: 15px;
+    }
+    .star-rating span {
+        color: #555;
+        transition: color 0.2s;
+    }
+    .star-rating span.active {
+        color: #ffc107;
+    }
+  </style>
+</head>
+<body>
+  <div class="review-page">
+    <div class="review-card">
+      <!-- ==================== THANH ĐIỀU HƯỚNG (NAVBAR) ==================== -->
+    <nav class="navbar">
+      <div class="logo">Nova<span>fulse</span></div>
+        <ul class="nav-links">
+            <li><a href="home.html#about">Giới thiệu</a></li>
+            <li><a href="home.html#benefits-container">Lợi ích</a></li>
+            <li><a href="home.html#services">Dịch vụ</a></li>
+            <li><a href="home.html#commitment">Cam kết</a></li>
+            <li><a href="home.html#contact">Liên hệ</a></li>
+            <li><a href="profile.html">Thông tin cá nhân</a></li>
+            <li><a href="review.html">Đánh giá</a></li>
+        </ul>
+        <!-- Xóa dữ liệu sessionStorage khi bấm đăng xuất -->
+        <a href="sign_up.html"><button class="btn-action" onclick="sessionStorage.removeItem('novafulse_products')">Đăng xuất</button></a>
+    </nav>
+
+      <section id="services" class="services">
+          <div class="services-container">
+              <h2>THÊM ĐÁNH GIÁ Ở ĐÂY:</h2>
+              <form id="reviewForm" class="product-form">
+                <div class="form-group">
+                    <input id="reviewName" type="text" placeholder="Họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <input id="reviewEmail" type="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input id="reviewPhone" type="tel" placeholder="Số điện thoại" required>
+                </div>
+
+                <!-- Phần chọn số sao -->
+                <div class="form-group">
+                    <label style="color: #fff; display: block; margin-bottom: 5px;">Chọn số sao đánh giá:</label>
+                    <div class="star-rating" id="starRating">
+                        <span data-value="1">★</span>
+                        <span data-value="2">★</span>
+                        <span data-value="3">★</span>
+                        <span data-value="4">★</span>
+                        <span data-value="5" class="active">★</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <textarea id="reviewDescription" placeholder="Mô tả chi tiết đánh giá" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Thêm Đánh Giá</button>
+              </form>
+
+              <div id="reviewResultList" class="review-result-list" style="margin-top: 20px;">
+                  <h3>Danh sách đánh giá đã thêm:</h3>
+              </div>
+          </div>
+      </section>
+    </div>
+  </div>
+  <section id="chatbot-section">
+        <div class="chat-launcher" id="chatLauncher" onclick="toggleChat()">📖</div>
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <span>Tư Vấn Thiết Kế Web</span>
+                <span class="close-btn" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-box" id="chatBox">
+                <div class="message ai">Xin chào! Bạn đang cần làm Landing Page hay Website bán hàng? Mình có thể hỗ trợ giải đáp các thắc mắc về chi phí, thời gian và kỹ thuật nhé!</div>
+            </div>
+            <div class="suggestions">
+                <button class="suggest-btn" onclick="askPreset('chính sách bảo hành như thế nào?')">chính sách bảo hành như thế nào?</button>
+                <button class="suggest-btn" onclick="askPreset('có hỗ trợ sau khi làm xong không?')">có hỗ trợ sau khi làm xong không?</button>
+                <button class="suggest-btn" onclick="askPreset('thanh toán làm mấy đợt?')">thanh toán làm mấy đợt?</button>
+                <button class="suggest-btn" onclick="askPreset('có phải cọc trước không?')">có phải cọc trước không?</button>
+                <button class="suggest-btn" onclick="askPreset('tên miền và hosting mua ở đâu?')">tên miền và hosting mua ở đâu?</button>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="userInput" placeholder="Nhập câu hỏi của bạn tại đây..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">Gửi</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER HIỆN ĐẠI NOVAFFULSE ==================== -->
+    <footer class="nova-footer">
+        <!-- Vầng sáng nền -->
+        <div class="glow-bg"></div>
+
+        <!-- Các hạt sáng lấp lánh trang trí -->
+        <div class="star" style="top: 25%; left: 15%; width: 2px; height: 2px; animation-delay: 0.5s;"></div>
+        <div class="star" style="top: 30%; right: 18%; width: 3px; height: 3px; animation-delay: 1.2s;"></div>
+        <div class="star" style="bottom: 25%; left: 22%; width: 2px; height: 2px; animation-delay: 0.8s;"></div>
+        <div class="star" style="bottom: 30%; right: 20%; width: 2.5px; height: 2.5px; animation-delay: 1.8s;"></div>
+
+        <!-- Khối chứa đường line và chữ bản quyền đồng bộ -->
+        <div class="tech-lines-container">
+            <div class="line-left"><div class="dot-left"></div></div>
+            <div class="copyright-text">
+                &copy; 2024 <span>Novafulse</span>. All rights reserved.
+            </div>
+            <div class="line-right"><div class="dot-right"></div></div>
+        </div>
+
+        <!-- Dòng phụ phía dưới -->
+        <div class="sub-text">
+            Next-Gen Digital Ecosystem &amp; Platform Solutions
+        </div>
+    </footer>
+
+  <script>
+      let selectedRating = 5; // Mặc định là 5 sao
+
+      document.addEventListener("DOMContentLoaded", function() {
+          // Xử lý sự kiện bấm chọn số sao
+          const stars = document.querySelectorAll('#starRating span');
+          stars.forEach(star => {
+              star.addEventListener('click', function() {
+                  selectedRating = this.getAttribute('data-value');
+                  stars.forEach(s => {
+                      if (s.getAttribute('data-value') <= selectedRating) {
+                          s.classList.add('active');
+                      } else {
+                          s.classList.remove('active');
+                      }
+                  });
+              });
+          });
+
+          // Dùng localStorage để giữ lại đánh giá kể cả khi thoát web hoặc tắt trình duyệt
+          let reviews = JSON.parse(localStorage.getItem('novafulse_reviews')) || [];
+          renderReviews(reviews);
+
+          // Bắt sự kiện thêm đánh giá mới
+          document.getElementById('reviewForm').addEventListener('submit', function(e) {
+              e.preventDefault();
+              const fullname = document.getElementById('reviewName').value.trim();
+              const email = document.getElementById('reviewEmail').value.trim();
+              const phone = document.getElementById('reviewPhone').value.trim();
+              const description = document.getElementById('reviewDescription').value.trim();
+              const rating = selectedRating;
+
+              const newReview = { fullname, email, phone, description, rating };
+              reviews.push(newReview);
+
+              // Lưu vào localStorage
+              localStorage.setItem('novafulse_reviews', JSON.stringify(reviews));
+
+              renderReviews(reviews);
+              this.reset();
+
+              // Reset lại số sao về mặc định (5 sao)
+              selectedRating = 5;
+              stars.forEach(s => s.classList.add('active'));
+          });
+      });
+
+      // Hàm render danh sách đánh giá ra màn hình kèm số sao
+      function renderReviews(reviews) {
+          const container = document.getElementById('reviewResultList');
+          container.innerHTML = '<h3>Danh sách đánh giá đã thêm:</h3>';
+
+          if (reviews.length === 0) {
+              container.innerHTML += '<p style="color: #888; font-style: italic; margin-top: 10px;">Chưa có đánh giá nào.</p>';
+              return;
+          }
+
+          reviews.forEach(rev => {
+              // Tạo chuỗi hiển thị số sao dạng icon ★
+              let starsHtml = '';
+              let ratingNum = rev.rating || 5;
+              for (let i = 1; i <= 5; i++) {
+                  starsHtml += `<span style="color: ${i <= ratingNum ? '#ffc107' : '#555'};">★</span>`;
+              }
+
+              const reviewItem = document.createElement('div');
+              reviewItem.classList.add('product-item');
+              reviewItem.style.cssText = "background: #181818; border: 1px solid #333; padding: 15px; margin-top: 10px; border-radius: 8px; color: #fff;";
+              reviewItem.innerHTML = `
+                  <p style="margin: 5px 0;"><strong>Họ và tên:</strong> ${rev.fullname}</p>
+                  <p style="margin: 5px 0;"><strong>Email:</strong> ${rev.email}</p>
+                  <p style="margin: 5px 0;"><strong>Số điện thoại:</strong> ${rev.phone}</p>
+                  <p style="margin: 5px 0;"><strong>Đánh giá:</strong> <span style="font-size: 1.2rem; letter-spacing: 2px;">${starsHtml}</span> (${ratingNum}/5 sao)</p>
+                  <p style="margin: 5px 0;"><strong>Nhận xét:</strong> ${rev.description}</p>
+              `;
+              container.appendChild(reviewItem);
+          });
+      }
+      const faqData = {
+            "baohanh": "Bên mình bảo hành vĩnh viễn cho mã nguồn do công ty lập trình và hỗ trợ kỹ thuật miễn phí trong suốt quá trình bạn sử dụng.",
+            "hotro": "Bên mình luôn hỗ trợ kỹ thuật tận tình, hướng dẫn quản trị từ A-Z và giải đáp mọi thắc mắc ngay cả khi website đã bàn giao xong.",
+            "thanhtoan": "Thường thì chi phí sẽ được chia làm 2 đến 3 đợt thanh toán linh hoạt theo tiến độ dự án để bạn yên tâm nhất.",
+            "coc": "Dạ có, khi bắt đầu triển khai dự án bên mình sẽ nhận một khoản cọc nhỏ để lên demo và tiến hành thiết kế.",
+            "hosting": "Bạn có thể tự đứng tên mua hoặc bên mình sẽ hỗ trợ đăng ký trọn gói các nhà cung cấp uy tín đứng tên 100% sở hữu của bạn."
+        };
+
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer.style.display === 'flex') {
+                chatContainer.style.display = 'none';
+            } else {
+                chatContainer.style.display = 'flex';
+            }
+        }
+
+        function askPreset(questionText) {
+            document.getElementById('userInput').value = questionText;
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const rawText = input.value.trim();
+
+            if (!rawText) return;
+
+            chatBox.innerHTML += `<div class="message user">${rawText}</div>`;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const lowerText = rawText.toLowerCase();
+            let aiResponse = "Xin lỗi, câu hỏi này nằm ngoài phạm vi hiểu biết của tôi. Bạn thử hỏi về 'bảo hành', 'hỗ trợ', 'thanh toán', 'cọc' hoặc 'hosting' xem sao nhé! 😅";
+
+            if (lowerText.includes("bảo hành")) {
+                aiResponse = faqData["baohanh"];
+            } else if (lowerText.includes("hỗ trợ")) {
+                aiResponse = faqData["hotro"];
+            } else if (lowerText.includes("thanh toán")) {
+                aiResponse = faqData["thanhtoan"];
+            } else if (lowerText.includes("cọc")) {
+                aiResponse = faqData["coc"];
+            } else if (lowerText.includes("tên miền") || lowerText.includes("hosting")) {
+                aiResponse = faqData["hosting"];
+            }
+
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="message ai">${aiResponse}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 400);
+        }
+  </script>
+</body>
+</html>

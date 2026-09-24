@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: url("imgs/images.jpg") center/cover no-repeat fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 30px 25px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.register-card h2 {
+  margin: 0 0 20px;
+  text-align: center;
+  color: #fcfbfb;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input {
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #4a90e2;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #5c5c5c;
+  color: #eeeeee;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #d53a3a;
+}
+
+.logo {
+  text-align: center;
+  color: rgb(255, 71, 71);
+  font-size: 40px;
+  font-weight: 900;
+  font-family: 'Poppins', sans-serif;
+}
+
+.logo span {
+  color: #dad8d8;
+  font-size: 40px;
+  font-weight: 900;
+  font-family: 'Poppins', sans-serif;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;         /* Chặn tuyệt đối việc rớt dòng */
+  white-space: nowrap;       /* Giữ toàn bộ chữ trên 1 hàng ngang */
+  width: max-content;        /* Nút tự động giãn rộng theo đúng độ dài của chữ bên trong */
+  margin-top: 12px;
+  margin-left: auto;         /* Dùng nếu bạn muốn căn giữa nút trong khung cha */
+  margin-right: auto;        /* Dùng nếu bạn muốn căn giữa nút trong khung cha */
+  padding: 12px;
+  padding-left: 85px;
+  padding-right: 85px;
+  border: none;
+  border-radius: 10px;
+  background: #242424;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #3d3d3d;
+}
+
+.button span {
+  font-weight: 900;
+  font-size: 16px;
+  color: #4a90e2;
+  margin-left: 5px;          /* Tạo khoảng hở nhỏ giữa 2 cụm từ */
+}
+
+.button a {
+  text-decoration: none;
+}
+
+#nameInput, #emailInput, #passwordInput {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+}
+
+/* --- TỐI ƯU HÓA CHO GIAO DIỆN ĐIỆN THOẠI --- */
+@media screen and (max-width: 480px) {
+  .register-page {
+    padding: 10px; /* Giảm padding màn hình để tận dụng tối đa chiều rộng */
+  }
+
+  .register-card {
+    max-width: 100%; /* Cho card giãn hết cỡ màn hình điện thoại */
+    padding: 20px 15px; /* Thu nhỏ padding bên trong card */
+    border-radius: 14px;
+  }
+
+  .logo {
+    font-size: 32px; /* Thu nhỏ logo trên màn hình nhỏ */
+  }
+
+  .register-card h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  input, button, .button {
+    font-size: 14px; /* Giảm nhẹ cỡ chữ input và button cho đỡ chật */
+    padding: 10px 12px;
+  }
+
+  /* Điều chỉnh lại padding nút chuyển trang để không bị tràn trên màn hình nhỏ */
+  .button {
+    width: 100%; /* Tràn đầy chiều ngang cho dễ bấm bằng ngón tay */
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+}
+
+p {
+  text-align: center;
+  color: #e4e4e4;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: -45px;
+}

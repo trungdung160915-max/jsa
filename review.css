@@ -1,0 +1,608 @@
+/* ==========================================
+   1. CẤU HÌNH CHUNG & BIẾN CƠ BẢN
+   ========================================== */
+@import url('https://googleapis.com');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* [Thuộc tính khó] Giữ nguyên kích thước phần tử kể cả khi có padding hoặc border, không bị phình to ra */
+    font-family: 'Inter', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth; /* [Thuộc tính khó] Tạo hiệu ứng cuộn mượt mà khi bấm vào các thẻ liên kết neo (#) */
+}
+
+body {
+    background-color: #0b0b0b;
+    color: #ffffff;
+    min-height: 100vh; /* [Thuộc tính khó] Chiều cao tối thiểu luôn bằng 100% chiều cao màn hình thiết bị */
+    padding-top: 80px; /* Đẩy nội dung xuống tránh bị thanh navbar cố định che mất */
+    line-height: 1.6; /* Khoảng cách giữa các dòng chữ giúp dễ đọc hơn */
+}
+
+/* Định nghĩa khung chuyển động (keyframes) cho hiệu ứng xuất hiện */
+@keyframes fadeInDown {
+    from {
+        opacity: 0; /* Bắt đầu trong suốt hoàn toàn */
+        transform: translateY(-20px); /* Bắt đầu từ vị trí cao hơn 20px */
+    }
+    to {
+        opacity: 1; /* Hiện rõ dần */
+        transform: translateY(0); /* Trở về vị trí gốc */
+    }
+}
+
+/* ==========================================
+   2. THANH ĐIỀU HƯỚNG (NAVBAR)
+   ========================================== */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* [Thuộc tính khó] Căn đều hai đầu: Logo một bên, Menu một bên */
+    align-items: center; /* [Thuộc tính khó] Căn giữa các phần tử theo trục dọc */
+    background-color: rgba(11, 11, 11, 0.95); /* Màu nền đen có độ trong suốt 95% */
+    padding: 15px 5%;
+    border-bottom: 1px solid #1f1f1f;
+    position: fixed; /* [Thuộc tính khó] Cố định thanh navbar ở một chỗ dù có cuộn trang */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* [Thuộc tính khó] Đảm bảo thanh navbar luôn nằm đè lên trên tất cả các thành phần khác */
+    backdrop-filter: blur(10px); /* [Thuộc tính khó] Làm mờ phần nền nằm phía sau thanh navbar (hiệu ứng kính mờ) */
+    animation: fadeInDown 0.6s ease-out both; /* Chạy hiệu ứng xuất hiện trong 0.6 giây */
+}
+
+.logo {
+    color: #ff003c;
+    font-size: 32px;
+    font-weight: 900;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: transform 0.3s ease; /* [Thuộc tính khó] Tạo chuyển động mượt 0.3s khi thay đổi hình dạng */
+}
+
+.logo span {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 900;
+    font-family: 'Poppins', sans-serif;
+}
+
+.logo:hover {
+    transform: scale(1.05); /* Phóng to logo lên 1.05 lần khi rê chuột vào */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px; /* Khoảng cách đều giữa các mục trong menu */
+}
+
+.nav-links li {
+    position: relative; /* [Thuộc tính khó] Tạo mốc tọa độ để định vị thẻ gạch chân ::after bên trong */
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #cccccc;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px 0;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+/* Hiệu ứng gạch chân chạy ra khi rê chuột vào menu */
+.nav-links li a::after {
+    content: '';
+    position: absolute; /* [Thuộc tính khó] Tách khỏi luồng bố cục để tự do đặt vị trí dưới chữ */
+    width: 100%;
+    transform: scaleX(0); /* [Thuộc tính khó] Ban đầu thu nhỏ chiều ngang về 0 (ẩn đi) */
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #ff003c;
+    transform-origin: bottom center; /* [Thuộc tính khó] Điểm mốc phóng to nằm ở chính giữa đáy */
+    transition: transform 0.25s ease-out;
+}
+
+.nav-links li a:hover {
+    color: #ff003c;
+}
+
+.nav-links li a:hover::after {
+    transform: scaleX(1); /* Khi rê chuột thì phóng to chiều ngang lên 100% (hiện ra) */
+}
+
+/* Nút Hành Động (Đăng xuất / Biểu mẫu) */
+.btn-action {
+    background-color: transparent;
+    color: #ff003c;
+    border: 1px solid #ff003c;
+    padding: 9px 22px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden; /* [Thuộc tính khó] Ẩn đi phần hiệu ứng nằm tràn ra ngoài khung viền bo tròn của nút */
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+/* Lớp phủ hiệu ứng trượt màu khi hover nút */
+.btn-action::before {
+    content: '';
+    position: absolute;
+    top: 100%; /* Ban đầu đẩy lớp phủ xuống dưới hẳn khung nút */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ff003c;
+    z-index: -1; /* Đặt chìm bên dưới chữ của nút */
+    transition: top 0.3s ease;
+}
+
+.btn-action:hover {
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 0, 60, 0.4); /* [Thuộc tính khó] Tạo hiệu ứng phát sáng mờ xung quanh nút */
+    transform: translateY(-2px); /* Nhấc nút dịch chuyển lên trên 2px */
+}
+
+.btn-action:hover::before {
+    top: 0; /* Khi hover thì trượt lớp phủ lên trên che kín nút */
+}
+
+.btn-action:active {
+    transform: translateY(0) scale(0.95); /* [Thuộc tính khó] Hiệu ứng nén nút nhỏ lại một chút khi bấm vào */
+}
+
+.services-container {
+    background: #0d0d0d;
+    border-radius: 16px;
+    border: 1px solid #1f1f1f;
+    padding: 60px 4%;
+    width: 95%;
+    max-width: 100%;
+    margin: 40px auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.services-container h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase; /* [Thuộc tính khó] Tự động chuyển toàn bộ chữ cái thành chữ IN HOA */
+}
+
+.services-container form {
+    background: #121212;
+    border: 1px solid #222222;
+    border-radius: 14px;
+    padding: 50px 4%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* [Thuộc tính khó] Chia form thành hệ thống lưới gồm 3 cột bằng nhau */
+    gap: 25px;
+}
+
+form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* [Thuộc tính khó] Dùng span 3 để ô input chiếm trọn cả 3 cột của lưới form */
+form .form-group:nth-child(4) {
+    grid-column: span 3;
+}
+
+form .form-group:nth-child(5) {
+    grid-column: span 3;
+}
+
+form .btn-submit {
+    grid-column: span 3; /* Nút bấm cũng chiếm trọn toàn bộ chiều ngang 3 cột */
+    background: #ff003c;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 18px 25px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+form .form-group input,
+form .form-group textarea {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    padding: 16px 20px;
+    color: #ffffff;
+    font-size: 1rem;
+    outline: none; /* [Thuộc tính khó] Tắt viền nét mặc định khi bấm vào ô nhập liệu của trình duyệt */
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+form .form-group input:focus,
+form .form-group textarea:focus {
+    border-color: #ff003c;
+    background: #1f1416;
+    box-shadow: 0 0 15px rgba(255, 0, 60, 0.25); /* Tạo viền sáng mờ khi người dùng đang click nhập liệu */
+}
+
+form .form-group textarea {
+    resize: vertical; /* [Thuộc tính khó] Chỉ cho phép người dùng kéo giãn khung textarea theo chiều dọc */
+    min-height: 120px;
+}
+
+form .btn-submit:hover {
+    background: #e00034;
+    box-shadow: 0 0 25px rgba(255, 0, 60, 0.5);
+    transform: translateY(-2px);
+}
+
+form .btn-submit:active {
+    transform: translateY(0);
+}
+
+/* ==========================================
+   6. DANH SÁCH KẾT QUẢ ĐÁNH GIÁ (REVIEW LIST)
+   ========================================== */
+.review-result-list {
+    margin-top: 30px;
+    background-color: #0b0b0b;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #220000;
+}
+
+.review-result-list h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ff1a1a;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.product-item {
+    background: #141414;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #262626;
+    border-left: 5px solid #ff1a1a;
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.1);
+}
+
+.product-item p {
+    margin: 8px 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.5;
+}
+
+.product-item strong {
+    color: #ff1a1a;
+    font-weight: 800;
+}
+
+.product-item a {
+    color: #ff4d4d;
+    text-decoration: none;
+    word-break: break-all; /* [Thuộc tính khó] Tự động ngắt dòng nếu đường link quá dài không bị tràn khung */
+    font-weight: 800;
+}
+
+.product-item a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+/* Định dạng cho thẻ section bọc ngoài */
+#chatbot-section {
+    position: relative;
+}
+
+/* Nút Emoji nổi khi chưa mở chat - ĐÃ SỬA LỖI CĂN GIỮA TUYỆT ĐỐI */
+.chat-launcher {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #1a1a1a;
+    color: white;
+    border-radius: 50%;
+
+    /* Căn giữa tuyệt đối bằng Flexbox hệ số 0 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 0; /* Ép dòng về 0 để không bị đẩy lún xuống dưới */
+
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background 0.2s;
+    z-index: 1000;
+}
+.chat-launcher:hover {
+    transform: scale(1.1);
+    background: #333333;
+}
+
+/* Khung chat chính - Đã đổi nền thành màu đen và chữ sáng cho hợp tông */
+.chat-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 420px;
+    background: #121212; /* Nền khung chat màu đen */
+    color: #f3f4f6;       /* Chữ sáng */
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    display: none;
+    flex-direction: column;
+    height: 550px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* Thanh tiêu đề - Nền Đen, Chữ Trắng */
+.chat-header {
+    background: #1a1a1a;
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2a2a2a;
+}
+.close-btn {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Khu vực hiển thị tin nhắn - Nền đen dịu */
+.chat-box {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #181818;
+}
+
+/* Khu vực nhập liệu - Nền đen khớp tổng thể */
+.chat-input-area {
+    display: flex;
+    padding: 12px;
+    background: #121212;
+    border-top: 1px solid #2a2a2a;
+}
+.chat-input-area input {
+    flex: 1;
+    padding: 12px;
+    background: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+}
+.chat-input-area input::placeholder {
+    color: #888;
+}
+
+/* Nút Gửi - Nền Sáng/Trắng hoặc Đen nổi bật tuỳ chỉnh, ở đây giữ đồng bộ */
+.chat-input-area button {
+    padding: 12px 18px;
+    background: #333333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.chat-input-area button:hover {
+    background: #555555;
+}
+
+.message {
+    margin-bottom: 12px;
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+/* Tin nhắn của Người Dùng - Nền Đen, Chữ Trắng */
+.user {
+    background: #333333;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+    border-bottom-right-radius: 0;
+}
+
+/* Tin nhắn của AI - Tông xám tối dễ đọc trên nền đen */
+.ai {
+    background: #262626;
+    color: #e5e7eb;
+    margin-right: auto;
+    text-align: left;
+    border-bottom-left-radius: 0;
+}
+
+/* Phần chứa các nút gợi ý */
+.suggestions {
+    padding: 8px;
+    background: #121212;
+    border-top: 1px solid #2a2a2a;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Nút gợi ý câu hỏi nhanh - Tông tối phù hợp nền đen */
+.suggest-btn {
+    background: #1e1e1e;
+    color: #d1d5db;
+    border: 1px solid #333;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.suggest-btn:hover {
+    background: #333333;
+    color: white;
+}
+/* Khung footer cao cấp */
+        .nova-footer {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 200px; /* Giảm nhẹ chiều cao khung cho cân đối */
+            background: linear-gradient(135deg, #0a0a0f 0%, #050508 50%, #020204 100%);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
+        /* Vạch laser phát sáng phía trên */
+        .nova-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 33%;
+            width: 34%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0055, #ff3366, #ff9900);
+            border-radius: 0 0 3px 3px;
+            box-shadow: 0 0 12px #ff0055, 0 0 25px #ff3366;
+        }
+
+        /* Vầng sáng nền trung tâm */
+        .glow-bg {
+            position: absolute;
+            width: 400px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 0, 85, 0.1) 0%, transparent 70%);
+            filter: blur(25px);
+            pointer-events: none;
+        }
+
+        /* Hiệu ứng hạt sao lấp lánh ngẫu nhiên */
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.4;
+            animation: twinkle 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        /* Bố cục đường line căn đều cân đối ôm lấy chữ */
+        .tech-lines-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 8px;
+            gap: 12px;
+        }
+
+        .line-left, .line-right {
+            flex: 1;
+            height: 1px;
+            position: relative;
+        }
+
+        .line-left {
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 85, 0.5));
+        }
+
+        .line-right {
+            background: linear-gradient(90deg, rgba(255, 153, 0, 0.5), transparent);
+        }
+
+        .dot-left, .dot-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 6px currentColor;
+        }
+
+        .dot-left {
+            right: 0;
+            background-color: #ff0055;
+            color: #ff0055;
+        }
+
+        .dot-right {
+            left: 0;
+            background-color: #ff9900;
+            color: #ff9900;
+        }
+
+        /* Nội dung chữ chính (đã thu nhỏ font) */
+        .copyright-text {
+            font-size: 15px; /* Giảm font chữ nhỏ gọn */
+            font-weight: 400;
+            color: #b0b0bf;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .copyright-text span {
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff0055, #ff9900);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 6px rgba(255, 0, 85, 0.4));
+        }
+
+        /* Dòng phụ phía dưới (đã thu nhỏ font) */
+        .sub-text {
+            font-size: 10px; /* Giảm font chữ nhỏ gọn */
+            font-weight: 500;
+            color: #555566;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }

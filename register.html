@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novafulse-Đăng ký</title>
+  <link rel="stylesheet" href="register.css">
+  <link href="https://googleapis.com" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="register-page">
+    <div class="register-card">
+      <div class="logo">Nova<span>fulse</span></div>
+      <p class="p">Novafulse – Uy tín dẫn đầu, chất lượng bền lâu.</p>
+      <h2>Đăng ký</h2>
+      <form id="form">
+        <input id="nameInput" type="text" placeholder="Họ và tên">
+        <input id="emailInput" type="email" placeholder="Email">
+        <input id="phoneInput" type="password" placeholder="Mật khẩu">
+        <button type="submit">Đăng ký</button>
+      </form>
+      <button class="button">
+       <a href="sign_up.html">Chuyển sang <span>đăng nhập?</span></a>
+      </button>
+    </div>
+  </div>
+  <script>
+    const form = document.getElementById("form");
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const name = document.getElementById("nameInput").value.trim();
+    const email = document.getElementById("emailInput").value.trim();
+    const phone = document.getElementById("phoneInput").value.trim();
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const isExists = users.some(user => user.phone === phone || user.email === email);
+    if (isExists) {
+      alert("Tài khoản hoặc số điện thoại này đã tồn tại trong hệ thống!");
+      return;
+    }
+    const user = {
+      name: name,
+      phone: phone,
+      email: email,
+    };
+
+    users.push(user);
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Thêm user thành công!!");
+    window.location.href = "sign_up.html";
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novafulse - Đăng nhập</title>
+  <link rel="stylesheet" href="sign_up.css">
+  <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+  <div class="register-page">
+    <div class="register-card">
+      <div class="logo">Nova<span>fulse</span></div>
+      <p>Novafulse – Uy tín dẫn đầu, chất lượng bền lâu.</p>
+      <h2>Đăng nhập</h2>
+      <form id="form">
+        <input id="emailInput" type="text" placeholder="Email hoặc tên đăng nhập" required>
+        <input id="phoneInput" type="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng nhập</button>
+      </form>
+      <button class="button">
+        <a href="register.html">Chuyển sang <span>đăng ký?</span></a>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("form");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("phoneInput").value.trim();
+
+      // QUAN TRỌNG: Kiểm tra nếu nhập tài khoản và mật khẩu là admin123123
+      if (email === "admin123123" && password === "admin123123") {
+        alert("Đăng nhập quyền Quản trị viên thành công!");
+        sessionStorage.setItem("isAdmin", "true");
+        window.location.href = "admin.html";
+        return;
+      }
+
+      // Kiểm tra tài khoản thông thường trong localStorage
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const validUser = users.find(user =>
+        (user.phone === password || user.email === email || user.username === email)
+      );
+
+      if (validUser) {
+        sessionStorage.setItem("username", validUser.username || validUser.name || "Người dùng");
+        sessionStorage.setItem("email", validUser.email);
+        alert("Đăng nhập thành công!");
+        window.location.href = "home.html";
+      } else {
+        alert("Tài khoản hoặc mật khẩu chưa tồn tại trong hệ thống!");
+      }
+    });
+  </script>
+</body>
+</html>
